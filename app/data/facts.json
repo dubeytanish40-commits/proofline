@@ -1,0 +1,4 @@
+[
+  {"id": "F-01", "text": "Proofline loads 40% faster than version 1 (Q3 2026 benchmark).", "keywords": ["40%", "faster"], "source": "Q3 2026 Benchmark Report", "valid_until": "2027-03-31"},
+  {"id": "F-02", "text": "Proofline had 99.5% uptime over the last 90 days.", "keywords": ["99.5%", "uptime"], "source": "Status Report, September 2026", "valid_until": "2026-12-31"}
+]

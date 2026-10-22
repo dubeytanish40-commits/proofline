@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proofline: Every claim, proven before it is published</title>
+<style>
+  :root { --navy:#0B1F3A; --teal:#14B8A6; --bg:#F8FAFC; --slate:#1E293B; --grey:#64748B; --line:#E2E8F0; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Inter, Arial, sans-serif; background:var(--bg); color:var(--slate); }
+  header { background:var(--navy); color:#fff; padding:14px 28px; border-bottom:4px solid var(--teal); display:flex; align-items:center; gap:14px; }
+  header b { font-size:22px; } header span { color:#CBD5E1; font-size:14px; }
+  main { max-width:1000px; margin:28px auto; padding:0 20px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px; margin-bottom:18px; box-shadow:0 2px 8px rgba(148,163,184,.25); }
+  textarea { width:100%; min-height:200px; padding:12px; font:inherit; border:1px solid #CBD5E1; border-radius:10px; }
+  button, .btn { background:var(--teal); color:#fff; border:0; padding:10px 20px; border-radius:999px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-block; }
+  button.secondary, .btn.secondary { background:#fff; color:var(--navy); border:1px solid #CBD5E1; }
+  .badges { display:flex; gap:10px; flex-wrap:wrap; margin:10px 0; }
+  .badge { padding:6px 14px; border-radius:999px; font-weight:600; font-size:14px; color:#fff; }
+  .b-high{background:#DC2626}.b-medium{background:#F59E0B}.b-low{background:#64748B}.b-info{background:#16A34A}.b-total{background:var(--navy)}
+  mark { padding:1px 3px; border-radius:4px; }
+  mark.sev-high{background:#FEE2E2} mark.sev-medium{background:#FEF3C7} mark.sev-low{background:#E2E8F0}
+  .finding { border-left:6px solid var(--grey); padding:12px 16px; margin:12px 0; background:#fff; border-radius:8px; border:1px solid var(--line); border-left-width:6px; }
+  .f-high{border-left-color:#DC2626}.f-medium{border-left-color:#F59E0B}.f-low{border-left-color:#64748B}.f-info{border-left-color:#16A34A}
+  .tag { font-size:12px; font-weight:700; text-transform:uppercase; color:#fff; padding:2px 10px; border-radius:999px; margin-right:6px; }
+  .meta { color:var(--grey); font-size:13px; margin-top:6px; }
+  footer { text-align:center; color:var(--grey); font-size:13px; padding:20px; }
+</style>
+</head>
+<body>
+<header><b>Proofline</b><span>Every claim, proven before it is published.</span></header>
+<main>
+{% block content %}{% endblock %}
+</main>
+<footer>Round 2 build · Rule-based checks, every finding cites its source · A human makes every final decision.</footer>
+</body>
+</html>

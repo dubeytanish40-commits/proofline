@@ -1,0 +1,24 @@
+{
+  "brand": {"correct_spelling": "Proofline", "rule_id": "BRAND-01", "source": "Brand Guide §1.1 (Product name)"},
+  "terminology": [
+    {"avoid": "utilize", "prefer": "use", "rule_id": "TERM-01", "source": "Terminology Guide §1 (Plain language)"},
+    {"avoid": "leverage", "prefer": "use", "rule_id": "TERM-02", "source": "Terminology Guide §1 (Plain language)"},
+    {"avoid": "synergy", "prefer": "collaboration", "rule_id": "TERM-03", "source": "Terminology Guide §1 (Plain language)"},
+    {"avoid": "synergies", "prefer": "collaboration", "rule_id": "TERM-03", "source": "Terminology Guide §1 (Plain language)"},
+    {"avoid": "AI-powered", "prefer": "AI-assisted", "rule_id": "TERM-04", "source": "Terminology Guide §2 (Humans decide)"}
+  ],
+  "tone": {
+    "hype_words": ["revolutionary", "game-changing", "best-in-class", "world-class", "cutting-edge", "unbeatable", "amazing", "magical", "loved by everyone"],
+    "hype_rule": {"rule_id": "TONE-01", "source": "Brand Voice Guide §2.3 (Confident, never boastful)"},
+    "exclamation_rule": {"rule_id": "TONE-02", "source": "Brand Voice Guide §2.4 (At most one exclamation mark)"},
+    "caps_rule": {"rule_id": "TONE-03", "source": "Brand Voice Guide §2.5 (No shouting in capitals)"},
+    "allowed_caps": ["AI", "PDF", "API", "FAQ", "CMS", "WCAG", "SQL", "USA", "HTML", "CSS"]
+  },
+  "claims": {
+    "patterns": ["#\\s?1\\b", "\\bnumber\\s+one\\b", "\\bfastest\\b", "\\bbest\\b", "\\bleading\\b", "\\bguarantee[sd]?\\b", "\\bnever\\s+fails?\\b", "\\b\\d+(\\.\\d+)?\\s?%"],
+    "rule_id": "CLAIM-01",
+    "source": "Claims Policy §4.2 (Every claim needs an approved fact)"
+  },
+  "readability": {"max_sentence_words": 25, "rule_id": "READ-01", "source": "Brand Voice Guide §3.1 (Short, clear sentences)"},
+  "accessibility": {"phrases": ["click here"], "rule_id": "A11Y-01", "source": "Accessibility Guide §1.2 (Descriptive link text)"}
+}

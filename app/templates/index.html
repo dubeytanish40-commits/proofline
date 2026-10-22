@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>Review your content before it is published</h2>
+  <p>Paste your draft below. Proofline checks it against the approved guidelines and facts, and shows the reason and source for every finding.</p>
+  <form method="post" action="/review">
+    <textarea id="text" name="text" placeholder="Paste your draft here..." required>{{ text }}</textarea>
+    <p>
+      <button type="submit">Review content</button>
+      <button type="button" class="secondary" onclick="document.getElementById('text').value = {{ sample|tojson }}">Use sample text</button>
+    </p>
+  </form>
+</div>
+{% endblock %}

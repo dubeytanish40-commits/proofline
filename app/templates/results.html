@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>Review result: {{ result.summary.status }}</h2>
+  <div class="badges">
+    <span class="badge b-total">{{ result.summary.total }} findings</span>
+    <span class="badge b-high">{{ result.summary.high }} high</span>
+    <span class="badge b-medium">{{ result.summary.medium }} medium</span>
+    <span class="badge b-low">{{ result.summary.low }} low</span>
+    <span class="badge b-info">{{ result.summary.info }} supported</span>
+  </div>
+  <p class="meta">{{ result.word_count }} words reviewed. Hover over a highlight to see why it was flagged.</p>
+  <div style="line-height:1.8">{{ highlighted|safe }}</div>
+</div>
+<div class="card">
+  <h3>Findings</h3>
+  {% for f in findings %}
+  <div class="finding f-{{ f.severity }}">
+    <span class="tag b-{{ f.severity }}">{{ f.severity if f.severity != 'info' else 'supported' }}</span>
+    <b>#{{ f.id }} · {{ f.category|capitalize }}</b>{% if f.status %} · {{ f.status }}{% endif %}
+    <div>Flagged: <b>"{{ f.flagged_text }}"</b></div>
+    <div>{{ f.reason }}</div>
+    {% if f.suggestion %}<div>Suggestion: <b>{{ f.suggestion }}</b></div>{% endif %}
+    <div class="meta">Source: {{ f.source }} · Rule {{ f.rule_id }} · {{ f.method }} · Confidence {{ (f.confidence * 100)|int }}%</div>
+  </div>
+  {% else %}
+  <p>No findings. This content follows the approved guidelines.</p>
+  {% endfor %}
+  <a class="btn secondary" href="/">Review another draft</a>
+</div>
+{% endblock %}
