@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Review history — Proofline{% endblock %}
+{% block content %}
+<div class="hero"><div class="eyebrow">Audit-friendly workflow</div><h1>Review history</h1><p class="lead">Browse saved submissions and recorded decisions. Open any record to inspect findings, matched evidence and its decision log.</p></div>
+<section class="stats"><div class="stat"><strong>{{ stats.total_reviews }}</strong><span>Total reviews</span></div><div class="stat"><strong>{{ stats.pending }}</strong><span>Pending</span></div><div class="stat"><strong>{{ stats.approved }}</strong><span>Approved</span></div><div class="stat"><strong>{{ stats.needs_changes }}</strong><span>Changes requested</span></div></section>
+<section class="panel"><div class="section-title"><h2>All saved reviews</h2><a class="btn secondary small" href="/">+ New review</a></div>
+{% if reviews %}<div class="table-wrap"><table class="review-table"><thead><tr><th>Review</th><th>Draft preview</th><th>Submitted</th><th>Status</th><th>Findings</th><th></th></tr></thead><tbody>
+{% for r in reviews %}<tr><td><a href="/reviews/{{ r.id }}"><strong>#{{ r.id }}</strong></a></td><td class="preview">{{ r.preview }}{% if r.preview|length >= 240 %}…{% endif %}</td><td>{{ r.created_at }}</td><td><span class="status {{ r.status|lower|replace(' ', '-') }}">{{ r.status }}</span></td><td>{{ r.summary.total }}</td><td><a class="btn secondary small" href="/reviews/{{ r.id }}">Open</a></td></tr>{% endfor %}
+</tbody></table></div>{% else %}<div class="empty">There are no saved reviews yet. <a href="/">Submit your first draft.</a></div>{% endif %}
+</section>
+{% endblock %}

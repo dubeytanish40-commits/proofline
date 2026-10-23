@@ -1,31 +1,31 @@
 {% extends "base.html" %}
+{% block title %}Review #{{ review.id }} — Proofline{% endblock %}
 {% block content %}
-<div class="card">
-  <h2>Review result: {{ result.summary.status }}</h2>
-  <div class="badges">
-    <span class="badge b-total">{{ result.summary.total }} findings</span>
-    <span class="badge b-high">{{ result.summary.high }} high</span>
-    <span class="badge b-medium">{{ result.summary.medium }} medium</span>
-    <span class="badge b-low">{{ result.summary.low }} low</span>
-    <span class="badge b-info">{{ result.summary.info }} supported</span>
-  </div>
-  <p class="meta">{{ result.word_count }} words reviewed. Hover over a highlight to see why it was flagged.</p>
-  <div style="line-height:1.8">{{ highlighted|safe }}</div>
-</div>
-<div class="card">
-  <h3>Findings</h3>
-  {% for f in findings %}
-  <div class="finding f-{{ f.severity }}">
-    <span class="tag b-{{ f.severity }}">{{ f.severity if f.severity != 'info' else 'supported' }}</span>
-    <b>#{{ f.id }} · {{ f.category|capitalize }}</b>{% if f.status %} · {{ f.status }}{% endif %}
-    <div>Flagged: <b>"{{ f.flagged_text }}"</b></div>
-    <div>{{ f.reason }}</div>
-    {% if f.suggestion %}<div>Suggestion: <b>{{ f.suggestion }}</b></div>{% endif %}
-    <div class="meta">Source: {{ f.source }} · Rule {{ f.rule_id }} · {{ f.method }} · Confidence {{ (f.confidence * 100)|int }}%</div>
-  </div>
-  {% else %}
-  <p>No findings. This content follows the approved guidelines.</p>
-  {% endfor %}
-  <a class="btn secondary" href="/">Review another draft</a>
-</div>
+<div class="section-title" style="align-items:flex-start"><div><div class="eyebrow">Review record #{{ review.id }}</div><h1 style="font-size:32px">Content review</h1><div class="meta">Submitted {{ review.created_at }} · Updated {{ review.updated_at }} · {{ review.word_count }} words</div></div><div class="actions" style="margin-top:0"><a class="btn secondary" href="/history">← History</a><a class="btn secondary" href="/reviews/{{ review.id }}/export.json">Export JSON ↓</a></div></div>
+<section class="panel">
+  <div class="section-title"><div><h2 style="margin-bottom:4px">{{ review.status }}</h2><p class="muted" style="margin:0">Automated scan summary; final approval is a reviewer decision.</p></div><span class="status {{ review.status|lower|replace(' ', '-') }}">{{ review.status }}</span></div>
+  <div class="badges"><span class="badge b-total">{{ result.summary.total }} findings</span><span class="badge b-high">{{ result.summary.high }} high severity</span><span class="badge b-medium">{{ result.summary.medium }} medium</span><span class="badge b-low">{{ result.summary.low }} low</span><span class="badge b-info">{{ result.summary.matched_facts }} fact matches</span></div>
+  <div class="badges"><span class="badge">{{ result.summary.claims_needing_evidence }} claims need evidence</span></div>
+  <div class="note">Interpretation: this engine matches configured rules and sample fact keywords. “Needs evidence” is not the same as “false”; a fact match is not independent verification.</div>
+</section>
+<section class="panel"><h2>Draft with highlighted findings</h2><p class="muted">Hover or focus on a highlighted phrase to read the reason. Overlapping findings remain available in the full findings list below.</p><div class="highlighted">{{ highlighted|safe }}</div></section>
+<section class="panel"><div class="section-title"><div><div class="eyebrow">Detailed results</div><h2>Findings ({{ findings|length }})</h2></div></div>
+{% for f in findings %}
+<article class="finding f-{{ f.severity }}">
+  <div class="finding-head"><span class="tag {{ f.severity }}">{{ 'Fact match' if f.severity == 'info' else f.severity }}</span><strong>#{{ f.id }} · {{ f.category|capitalize }}</strong>{% if f.status %}<span class="status {{ 'approved' if f.evidence_status == 'matched_approved_fact' else 'pending' }}">{{ f.status }}</span>{% endif %}</div>
+  <p><strong>Flagged text:</strong> “{{ f.flagged_text }}”</p><p>{{ f.reason }}</p>
+  {% if f.suggestion %}<div class="suggestion"><strong>Suggested wording:</strong> {{ f.suggestion }}</div>{% endif %}
+  {% if f.evidence %}<blockquote><strong>Matched configured evidence · {{ f.evidence.id }}</strong><br>{{ f.evidence.text }}<br><span class="meta">Source: {{ f.evidence.source }}{% if f.evidence.valid_until %} · Valid until {{ f.evidence.valid_until }}{% endif %}</span></blockquote>{% endif %}
+  <div class="meta">Rule: {{ f.rule_id }} · Source: {{ f.source }} · Method: {{ f.method }}</div>
+</article>
+{% else %}<div class="empty">No configured rules were triggered by this draft. This is not a guarantee that all claims are accurate or all guidelines are satisfied.</div>{% endfor %}
+</section>
+<section class="panel"><div class="eyebrow">Human review</div><h2>Record a decision</h2><p class="muted">Select a decision after reading the findings. This demo has no sign-in system; reviewer names are labels, not authenticated identities.</p>
+<form method="post" action="/reviews/{{ review.id }}/decision">
+  <div class="decision-grid"><div><label class="form-label" for="reviewer">Reviewer display name</label><input class="input" id="reviewer" name="reviewer" value="Reviewer" maxlength="80"></div><div><label class="form-label" for="action">Decision</label><select class="input" name="action" id="action" required><option value="Changes requested">Request changes</option><option value="Approved">Approve content</option><option value="Rejected">Reject content</option><option value="Reopened">Reopen review</option></select></div></div>
+  <label class="form-label" for="note">Decision note (optional)</label><textarea class="textarea" style="min-height:90px" id="note" name="note" maxlength="2000" placeholder="Explain the decision, missing evidence, or required edits..."></textarea>
+  <div class="actions"><button type="submit">Save decision</button></div>
+</form>
+</section>
+<section class="panel"><h2>Audit trail</h2><ul class="timeline">{% for e in review.events %}<li><strong>{{ e.action }}</strong> <span class="muted">by {{ e.reviewer }}</span><div class="meta">{{ e.created_at }}</div>{% if e.note %}<div>{{ e.note }}</div>{% endif %}</li>{% endfor %}</ul></section>
 {% endblock %}

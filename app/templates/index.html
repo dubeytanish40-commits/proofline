@@ -1,14 +1,48 @@
 {% extends "base.html" %}
+{% block title %}Proofline — Start a content review{% endblock %}
 {% block content %}
-<div class="card">
-  <h2>Review your content before it is published</h2>
-  <p>Paste your draft below. Proofline checks it against the approved guidelines and facts, and shows the reason and source for every finding.</p>
-  <form method="post" action="/review">
-    <textarea id="text" name="text" placeholder="Paste your draft here..." required>{{ text }}</textarea>
-    <p>
-      <button type="submit">Review content</button>
-      <button type="button" class="secondary" onclick="document.getElementById('text').value = {{ sample|tojson }}">Use sample text</button>
-    </p>
+<section class="hero">
+  <div class="hero-grid">
+    <div><div class="eyebrow">Review before publish</div><h1>Better content starts with <span style="color:var(--teal)">clear evidence.</span></h1>
+      <p class="lead">Check a draft against configured brand guidelines, terminology, accessibility rules and an approved-fact library. Every finding is explainable and every final decision stays with a human reviewer.</p>
+      <div class="pills"><span class="pill">Explainable rules</span><span class="pill">Evidence matching</span><span class="pill">Review history</span><span class="pill">Human decisions</span></div>
+    </div>
+    <aside class="hero-note"><div class="eyebrow" style="color:#7ce2d6">Built for transparent review</div><h2 style="margin-top:9px">Find issues. Understand why. Record the decision.</h2><p>Proofline is a rules-based review assistant, not an independent truth detector. A missing fact means “needs evidence,” not “false.”</p><a class="btn" style="align-self:flex-start;background:#53d5c7;color:#10233f" href="#new-review">Start a review ↓</a></aside>
+  </div>
+</section>
+<section class="stats" aria-label="Review statistics">
+  <div class="stat"><strong>{{ stats.total_reviews }}</strong><span>Total reviews saved</span></div>
+  <div class="stat"><strong>{{ stats.pending }}</strong><span>Pending human review</span></div>
+  <div class="stat"><strong>{{ stats.approved }}</strong><span>Approved</span></div>
+  <div class="stat"><strong>{{ stats.last_7_days }}</strong><span>Submitted in last 7 days</span></div>
+</section>
+<section class="panel" id="new-review">
+  <div class="eyebrow">New submission</div><h2>Review a draft</h2>
+  <p class="muted">Paste the content you plan to publish. Inputs are limited to {{ "{:,.0f}".format(max_chars) }} characters per review.</p>
+  {% if error %}<div class="error" role="alert">{{ error }}</div>{% endif %}
+  <form method="post" action="/review" id="review-form">
+    <label class="form-label" for="text">Draft content</label>
+    <textarea class="textarea" id="text" name="text" maxlength="{{ max_chars }}" placeholder="Paste a product description, campaign, announcement or other draft..." required>{{ text }}</textarea>
+    <div class="form-row"><span>Tip: include the full paragraph so sentence and claim context are preserved.</span><span id="char-count" aria-live="polite">0 / {{ max_chars }}</span></div>
+    <div class="actions"><button type="submit">Run review <span aria-hidden="true">→</span></button><button type="button" class="secondary" id="sample-button">Load demo text</button><a class="btn secondary" href="/history">View review history</a></div>
   </form>
-</div>
+  <div class="note" style="margin-top:18px"><strong>Prototype and privacy note:</strong> this public demo has no sign-in or user access controls. Do not submit personal, confidential, or sensitive drafts. <strong>Data note:</strong> The fact library and guidelines are sample project configuration. A match means the text matched those configured rules; it does not certify a public claim independently.</div>
+</section>
+<section class="panel">
+  <div class="section-title"><div><div class="eyebrow">Recent activity</div><h2>Latest reviews</h2></div><a href="/history">See all →</a></div>
+  {% if recent %}<div class="table-wrap"><table class="review-table"><thead><tr><th>ID</th><th>Draft preview</th><th>Status</th><th>Findings</th><th></th></tr></thead><tbody>
+  {% for r in recent %}<tr><td><a href="/reviews/{{ r.id }}">#{{ r.id }}</a></td><td class="preview">{{ r.preview }}{% if r.preview|length >= 240 %}…{% endif %}<div class="meta">{{ r.created_at }}</div></td><td><span class="status {{ r.status|lower|replace(' ', '-') }}">{{ r.status }}</span></td><td>{{ r.summary.total }}</td><td><a class="btn secondary small" href="/reviews/{{ r.id }}">Open</a></td></tr>{% endfor %}
+  </tbody></table></div>{% else %}<div class="empty">No reviews yet. Submit your first draft above to create a review record.</div>{% endif %}
+</section>
+<script>
+(function(){
+  const field=document.getElementById('text');
+  const count=document.getElementById('char-count');
+  const max={{ max_chars }};
+  function update(){count.textContent=field.value.length.toLocaleString()+' / '+max.toLocaleString();}
+  field.addEventListener('input',update); update();
+  document.getElementById('sample-button').addEventListener('click',function(){field.value={{ sample|tojson }};update();field.focus();});
+  document.getElementById('review-form').addEventListener('submit',function(e){if(!field.value.trim()){e.preventDefault();field.setCustomValidity('Please enter some draft content.');field.reportValidity();}else{field.setCustomValidity('');}});
+})();
+</script>
 {% endblock %}
